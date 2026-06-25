@@ -30,5 +30,15 @@
     "notes": "",
     "next": "automating status updates as projects progress, and an optional weekly staleness digest",
     "lastUpdated": "2026-06-25"
+  },
+  {
+    "name": "Captury to Freed (C2F)",
+    "status": "Live",
+    "platform": "Claude",
+    "plainSummary": "An internal tool that translates motion capture data from one format to another. In particular, it takes the position of a real person in a studio, translates it into a different format which is used in a virtual studio to achieve accurate shadows and reflections",
+    "technicalSummary": "TBC",
+    "notes": "",
+    "next": "",
+    "lastUpdated": "2026-06-25"
   }
 ]
