@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Perforce Sync Tool",
+    "status": "Live",
+    "plainSummary": "A simple web tool that pushes the right graphics and configuration files out to a group of broadcast workstations, so the same content is in place everywhere before a show. It's used by broadcast operations staff and matters because mismatched files during a live broadcast can disrupt what goes on air.",
+    "technicalSummary": "A small FastAPI service that orchestrates Perforce-driven file distribution to multiple workstations, with a no-build vanilla HTML/CSS/JS frontend and Server-Sent Events for live progress. Notable design points include path-aware file-exclusion rules, a heartbeat-based lock to prevent concurrent runs, and a watchdog enforcing sync/switch timeouts; packaged for offline install.",
+    "notes": "In active use during a live broadcast event. Next: gathering user feedback.",
+    "lastUpdated": "2026-06-25"
+  },
+  {
+    "name": "Unreal Engine Crash Diagnosis",
+    "status": "In Development",
+    "plainSummary": "An internal web tool that helps staff understand why an Unreal Engine production crashed. You upload the crash files and it explains, in plain English, the most likely cause and the reasoning behind it, so problems can be tracked down faster.",
+    "technicalSummary": "Python/FastAPI service with a browser UI, deployed as a Docker container. It deterministically pre-processes crashes (parses logs, walks minidumps, resolves debug symbols), then sends only redacted, symbolicated callstack text to the Claude API for root-cause reasoning, storing each diagnosis in Postgres to surface recurring crash signatures. Notable points: a mandatory redaction layer (raw dumps never leave the host), graceful handling of unsymbolicated vendor builds with confidence capping, and support for UE4, UE5, and custom engines (Pixotope, Zero Density).",
+    "notes": "Core diagnosis, shared crash history, and CI/CD are in place; remaining work is optional fix-suggestion/ticket-draft modes and access control, plus first production deployment.",
+    "lastUpdated": "2026-06-25"
+  },
+  {
+    "name": "Claude Projects Directory",
+    "status": "In Development",
+    "plainSummary": "The internal directory you're reading right now — a single web page listing the Claude AI projects in use across dock10, with a plain-English and a technical summary for each. It helps staff, freelancers and visitors quickly see what's being built, what's live, and what's finished.",
+    "technicalSummary": "A single self-contained index.html (all CSS and JS inline, no external dependencies) hosted on GitHub Pages, which renders project data from a separate projects.json file so entries can be added or updated without editing the page itself. Access is gated by a shared passphrase remembered in the browser's localStorage, and the responsive layout adapts from phones to large wall displays.",
+    "notes": "Initial build with the first three projects. Next: automating status updates as projects progress, and an optional weekly staleness digest.",
+    "lastUpdated": "2026-06-25"
+  }
+]

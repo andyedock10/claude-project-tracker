@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>dock10 Claude projects</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --surface: #1a2027;
+    --surface-2: #222a33;
+    --card: #1e252e;
+    --border: #2c3540;
+    --border-strong: #3a4552;
+    --text: #e8edf2;
+    --text-muted: #9aa7b4;
+    --text-faint: #6b7884;
+    --accent: #2dd4bf;
+    --accent-ink: #0f1419;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --live-bg: #14352a;       --live-fg: #4ade80;   --live-bd: #1f5a44;
+    --dev-bg: #3a2e12;        --dev-fg: #fbbf24;    --dev-bd: #5e4a1a;
+    --done-bg: #16304d;       --done-fg: #60a5fa;   --done-bd: #244a73;
+    font-synthesis: none;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Passphrase gate ---------- */
+  #gate {
+    position: fixed; inset: 0; z-index: 1000;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  #gate.hidden { display: none; }
+  .gate-panel {
+    width: 100%; max-width: 380px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    text-align: center;
+  }
+  .gate-logo {
+    font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
+    margin: 0 0 4px;
+  }
+  .gate-logo span { color: var(--accent); }
+  .gate-sub { color: var(--text-muted); font-size: 14px; margin: 0 0 24px; }
+  #gate input {
+    width: 100%; padding: 12px 14px; font-size: 15px;
+    background: var(--surface-2); color: var(--text);
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    outline: none; margin-bottom: 12px;
+  }
+  #gate input:focus { border-color: var(--accent); }
+  #gate button {
+    width: 100%; padding: 12px 14px; font-size: 15px; font-weight: 600;
+    background: var(--accent); color: var(--accent-ink);
+    border: none; border-radius: var(--radius-sm); cursor: pointer;
+  }
+  #gate button:hover { filter: brightness(1.05); }
+  .gate-error {
+    color: #f87171; font-size: 13px; min-height: 18px; margin: 10px 0 0;
+  }
+
+  /* ---------- Layout ---------- */
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+  header.site {
+    display: flex; align-items: baseline; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px; margin-bottom: 4px;
+  }
+  h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin: 0; }
+  h1 span { color: var(--accent); }
+  .lock-tag { font-size: 13px; color: var(--text-faint); }
+  .intro { color: var(--text-muted); font-size: 15px; margin: 6px 0 22px; max-width: 720px; }
+
+  /* ---------- Filter bar ---------- */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .filter-btn {
+    font-size: 14px; padding: 7px 16px; cursor: pointer;
+    background: var(--surface); color: var(--text-muted);
+    border: 1px solid var(--border); border-radius: 999px;
+  }
+  .filter-btn:hover { border-color: var(--border-strong); color: var(--text); }
+  .filter-btn.active {
+    background: var(--accent); color: var(--accent-ink);
+    border-color: var(--accent); font-weight: 600;
+  }
+  .filter-btn .count { opacity: 0.7; margin-left: 4px; font-size: 12px; }
+
+  /* ---------- Cards ---------- */
+  .grid {
+    display: grid; gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 22px;
+    display: flex; flex-direction: column;
+  }
+  .card-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 12px; margin-bottom: 14px;
+  }
+  .card-name { font-size: 17px; font-weight: 600; margin: 0; }
+  .badge {
+    font-size: 12px; font-weight: 600; white-space: nowrap;
+    padding: 4px 11px; border-radius: 999px; border: 1px solid transparent;
+  }
+  .badge.live { background: var(--live-bg); color: var(--live-fg); border-color: var(--live-bd); }
+  .badge.dev  { background: var(--dev-bg);  color: var(--dev-fg);  border-color: var(--dev-bd); }
+  .badge.done { background: var(--done-bg); color: var(--done-fg); border-color: var(--done-bd); }
+  .field-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+    color: var(--text-faint); margin: 0 0 3px;
+  }
+  .field-text { font-size: 14.5px; color: var(--text); margin: 0 0 14px; }
+  .card-foot {
+    margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap;
+  }
+  .notes { font-size: 13.5px; color: var(--text-muted); margin: 0; flex: 1; min-width: 200px; }
+  .notes-label { color: var(--text-faint); font-weight: 600; }
+  .updated { font-size: 12px; color: var(--text-faint); white-space: nowrap; }
+
+  .empty { color: var(--text-muted); padding: 40px 0; text-align: center; }
+  footer.site { margin-top: 40px; color: var(--text-faint); font-size: 12px; text-align: center; }
+
+  @media (max-width: 520px) {
+    .wrap { padding: 20px 14px 48px; }
+    h1 { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Passphrase gate -->
+  <div id="gate">
+    <form class="gate-panel" id="gate-form" autocomplete="off">
+      <p class="gate-logo">dock<span>10</span></p>
+      <p class="gate-sub">Claude projects directory</p>
+      <input type="password" id="gate-input" placeholder="Enter passphrase" aria-label="Passphrase" autofocus />
+      <button type="submit">Enter</button>
+      <p class="gate-error" id="gate-error" role="alert"></p>
+    </form>
+  </div>
+
+  <!-- Main page -->
+  <div class="wrap" id="app" hidden>
+    <header class="site">
+      <h1>dock<span>10</span> Claude projects</h1>
+      <span class="lock-tag">Internal directory</span>
+    </header>
+    <p class="intro">A live index of the AI projects in use across dock10. Filter by status to see what's in progress, live, or complete.</p>
+
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>No projects match this filter.</div>
+
+    <footer class="site" id="footer"></footer>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---- Passphrase gate (soft gate; source is public by design) ---- */
+  var PASSPHRASE = "dock10dock10";
+  var STORE_KEY = "dock10_projects_unlocked";
+  var gate = document.getElementById("gate");
+  var app = document.getElementById("app");
+
+  function unlock() {
+    gate.classList.add("hidden");
+    app.hidden = false;
+    loadProjects();
+  }
+
+  try {
+    if (localStorage.getItem(STORE_KEY) === "1") { unlock(); }
+  } catch (e) { /* localStorage unavailable; gate stays */ }
+
+  document.getElementById("gate-form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var val = document.getElementById("gate-input").value.trim();
+    if (val === PASSPHRASE) {
+      try { localStorage.setItem(STORE_KEY, "1"); } catch (e) {}
+      unlock();
+    } else {
+      document.getElementById("gate-error").textContent = "Incorrect passphrase. Try again.";
+      document.getElementById("gate-input").value = "";
+      document.getElementById("gate-input").focus();
+    }
+  });
+
+  /* ---- Project rendering ---- */
+  var STATUSES = [
+    { key: "all",            label: "All" },
+    { key: "In Development", label: "In development" },
+    { key: "Live",           label: "Live" },
+    { key: "Complete",       label: "Complete" }
+  ];
+  var BADGE = { "Live": "live", "In Development": "dev", "Complete": "done" };
+  var ORDER = { "Live": 0, "In Development": 1, "Complete": 2 };
+
+  var allProjects = [];
+  var activeFilter = "all";
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return "";
+    var d = new Date(iso + "T00:00:00");
+    if (isNaN(d)) return esc(iso);
+    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear();
+  }
+
+  function loadProjects() {
+    fetch("projects.json", { cache: "no-store" })
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        allProjects = Array.isArray(data) ? data.slice() : [];
+        allProjects.sort(function (a, b) {
+          var oa = ORDER[a.status] == null ? 9 : ORDER[a.status];
+          var ob = ORDER[b.status] == null ? 9 : ORDER[b.status];
+          if (oa !== ob) return oa - ob;
+          return String(a.name).localeCompare(String(b.name));
+        });
+        renderFilters();
+        render();
+      })
+      .catch(function (err) {
+        document.getElementById("grid").innerHTML = "";
+        var e = document.getElementById("empty");
+        e.hidden = false;
+        e.textContent = "Could not load projects.json (" + err.message + "). If you are viewing this file directly, serve it over http.";
+      });
+  }
+
+  function countFor(key) {
+    if (key === "all") return allProjects.length;
+    return allProjects.filter(function (p) { return p.status === key; }).length;
+  }
+
+  function renderFilters() {
+    var box = document.getElementById("filters");
+    box.innerHTML = "";
+    STATUSES.forEach(function (s) {
+      var b = document.createElement("button");
+      b.className = "filter-btn" + (s.key === activeFilter ? " active" : "");
+      b.innerHTML = esc(s.label) + ' <span class="count">' + countFor(s.key) + "</span>";
+      b.addEventListener("click", function () {
+        activeFilter = s.key;
+        renderFilters();
+        render();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function render() {
+    var grid = document.getElementById("grid");
+    var empty = document.getElementById("empty");
+    var list = activeFilter === "all"
+      ? allProjects
+      : allProjects.filter(function (p) { return p.status === activeFilter; });
+
+    grid.innerHTML = "";
+    empty.hidden = list.length !== 0;
+
+    list.forEach(function (p) {
+      var cls = BADGE[p.status] || "dev";
+      var card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML =
+        '<div class="card-head">' +
+          '<h2 class="card-name">' + esc(p.name) + '</h2>' +
+          '<span class="badge ' + cls + '">' + esc(p.status) + '</span>' +
+        '</div>' +
+        '<p class="field-label">Non-technical description</p>' +
+        '<p class="field-text">' + esc(p.plainSummary) + '</p>' +
+        '<p class="field-label">Technical description</p>' +
+        '<p class="field-text">' + esc(p.technicalSummary) + '</p>' +
+        '<div class="card-foot">' +
+          (p.notes ? '<p class="notes"><span class="notes-label">Notes:</span> ' + esc(p.notes) + '</p>' : '<p class="notes"></p>') +
+          '<span class="updated">Updated ' + fmtDate(p.lastUpdated) + '</span>' +
+        '</div>';
+      grid.appendChild(card);
+    });
+
+    document.getElementById("footer").textContent =
+      allProjects.length + " project" + (allProjects.length === 1 ? "" : "s") + " · dock10 internal directory";
+  }
+})();
+</script>
+</body>
+</html>
