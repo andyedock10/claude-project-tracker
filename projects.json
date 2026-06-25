@@ -18,7 +18,7 @@
   {
     "name": "Claude Projects Directory",
     "status": "In Development",
-    "plainSummary": "The internal directory you're reading right now — a single web page listing the Claude AI projects in use across dock10, with a plain-English and a technical summary for each. It helps staff, freelancers and visitors quickly see what's being built, what's live, and what's finished.",
+    "plainSummary": "The internal directory you're reading right now — a single web page listing the Claude AI projects in use across Media City Studios, with a plain-English and a technical summary for each. It helps staff, freelancers and visitors quickly see what's being built, what's live, and what's finished.",
     "technicalSummary": "A single self-contained index.html (all CSS and JS inline, no external dependencies) hosted on GitHub Pages, which renders project data from a separate projects.json file so entries can be added or updated without editing the page itself. Access is gated by a shared passphrase remembered in the browser's localStorage, and the responsive layout adapts from phones to large wall displays.",
     "notes": "Initial build with the first three projects. Next: automating status updates as projects progress, and an optional weekly staleness digest.",
     "lastUpdated": "2026-06-25"

@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
-<title>dock10 Claude projects</title>
+<title>Media City Studios Claude projects</title>
 <style>
   :root {
     --bg: #0f1419;
@@ -148,7 +148,7 @@
   <!-- Passphrase gate -->
   <div id="gate">
     <form class="gate-panel" id="gate-form" autocomplete="off">
-      <p class="gate-logo">dock<span>10</span></p>
+      <p class="gate-logo">Media City <span>Studios</span></p>
       <p class="gate-sub">Claude projects directory</p>
       <input type="password" id="gate-input" placeholder="Enter passphrase" aria-label="Passphrase" autofocus />
       <button type="submit">Enter</button>
@@ -159,10 +159,10 @@
   <!-- Main page -->
   <div class="wrap" id="app" hidden>
     <header class="site">
-      <h1>dock<span>10</span> Claude projects</h1>
+      <h1>Media City <span>Studios</span> Claude projects</h1>
       <span class="lock-tag">Internal directory</span>
     </header>
-    <p class="intro">A live index of the AI projects in use across dock10. Filter by status to see what's in progress, live, or complete.</p>
+    <p class="intro">A live index of the AI projects in use across Media City Studios. Filter by status to see what's in progress, live, or complete.</p>
 
     <div class="filters" id="filters"></div>
     <div class="grid" id="grid"></div>
@@ -176,8 +176,8 @@
   "use strict";
 
   /* ---- Passphrase gate (soft gate; source is public by design) ---- */
-  var PASSPHRASE = "dock10dock10";
-  var STORE_KEY = "dock10_projects_unlocked";
+  var PASSPHRASE = "mediacity";
+  var STORE_KEY = "mediacity_projects_unlocked";
   var gate = document.getElementById("gate");
   var app = document.getElementById("app");
 
@@ -308,7 +308,7 @@
     });
 
     document.getElementById("footer").textContent =
-      allProjects.length + " project" + (allProjects.length === 1 ? "" : "s") + " · dock10 internal directory";
+      allProjects.length + " project" + (allProjects.length === 1 ? "" : "s") + " · Media City Studios internal directory";
   }
 })();
 </script>
