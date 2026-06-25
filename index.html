@@ -89,6 +89,7 @@
     font-size: 11px; color: var(--text-muted);
     text-transform: uppercase; letter-spacing: 1.2px;
   }
+  .site-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
   h1 {
     font-size: 26px; font-weight: 700; margin: 0 0 8px; letter-spacing: -0.4px;
   }
@@ -147,7 +148,7 @@
   .field-text { font-size: 14.5px; color: var(--ink); margin: 0 0 16px; }
   .card-foot {
     margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap;
+    display: flex; flex-direction: column; gap: 5px;
   }
   .notes { font-size: 13.5px; color: var(--text-muted); margin: 0; flex: 1; min-width: 200px; }
   .notes-label {
@@ -178,10 +179,10 @@
 
   /* Single page-level updated stamp */
   .page-updated {
-    display: inline-block; margin: 0 0 24px;
+    display: inline-block; margin: 0;
     background: var(--cream); color: var(--text-muted);
     font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px;
-    padding: 6px 13px; border-radius: 999px;
+    padding: 5px 12px; border-radius: 999px;
   }
 
   .empty { color: var(--text-muted); padding: 48px 0; text-align: center; }
@@ -244,11 +245,13 @@
           <path d="M82.7036 33.9797H72.7417V65.1298H82.7036V33.9797Z"/>
         </svg>
       </span>
-      <span class="lock-tag">Internal directory</span>
+      <div class="site-meta">
+        <span class="lock-tag">Internal directory</span>
+        <span class="page-updated" id="page-updated"></span>
+      </div>
     </header>
     <h1>AI projects &amp; tools</h1>
-    <p class="intro">A live index of all AI projects and tools across Media City Studios. Filter by status to see what's in progress or live.</p>
-    <p class="page-updated" id="page-updated"></p>
+    <p class="intro">A live index of all AI projects and tools across Media City Studios.</p>
 
     <div class="filters" id="filters"></div>
     <div class="grid" id="grid"></div>
@@ -395,7 +398,10 @@
           '<summary>Technical description</summary>' +
           '<p class="field-text">' + esc(p.technicalSummary) + '</p>' +
         '</details>' +
-        (p.notes ? '<div class="card-foot"><p class="notes"><span class="notes-label">Notes:</span> ' + esc(p.notes) + '</p></div>' : '');
+        ((p.notes || p.next) ? '<div class="card-foot">' +
+          (p.notes ? '<p class="notes"><span class="notes-label">Notes:</span> ' + esc(p.notes) + '</p>' : '') +
+          (p.next ? '<p class="notes"><span class="notes-label">Next:</span> ' + esc(p.next) + '</p>' : '') +
+        '</div>' : '');
       grid.appendChild(card);
     });
 
